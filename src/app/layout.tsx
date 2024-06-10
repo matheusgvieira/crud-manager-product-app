@@ -1,11 +1,13 @@
 "use client";
+
 import "../styles/globals.css";
+
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { ReactQueryClientProvider } from "./ReactQueryClientProvider";
 import { useRouter as useNavigate } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/store/useAuth";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 export default function RootLayout({
   children,
@@ -39,7 +41,9 @@ export default function RootLayout({
           pauseOnHover
           theme="light"
         />
-        <body suppressHydrationWarning={true}>{children}</body>
+        <body suppressHydrationWarning={true}>
+          <AntdRegistry>{children}</AntdRegistry>
+        </body>
       </ReactQueryClientProvider>
     </html>
   );

@@ -1,6 +1,5 @@
 "use client";
 import ProductList from "../components/ProductList";
-import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   return (

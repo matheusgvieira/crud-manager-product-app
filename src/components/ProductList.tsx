@@ -3,12 +3,13 @@ import { Table, Button, Spin, Modal, Form, Input } from "antd";
 import { Product, useProductStore } from "../store/useProductStore";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "react-query";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Paragraph from "antd/es/typography/Paragraph";
 import { format } from "date-fns";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useAuth } from "@/store/useAuth";
 import { toast } from "react-toastify";
+import { usePushRoute } from "@/routes";
 
 const ProductList = () => {
   const [form] = Form.useForm();
@@ -20,6 +21,7 @@ const ProductList = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const router = useRouter();
+  const { pushRoute } = usePushRoute();
   const [openModal, setOpenModal] = useState(false);
 
   const fetchProducts = useProductStore((state) => state.fetchProducts);
@@ -28,6 +30,9 @@ const ProductList = () => {
     ["fetch-products-list", page, pageSize],
     () => Promise.all([fetchProducts(page, pageSize), checkAuth()]),
     {
+      onError: () => {
+        toast.error("Error fetching products, try again later!");
+      },
       retry: false,
     }
   );
@@ -99,7 +104,7 @@ const ProductList = () => {
         <>
           <Button
             type="link"
-            onClick={() => router.push(`/edit-product/${record._id}`)}
+            onClick={() => pushRoute(`/edit-product/${record._id}`)}
             disabled={!isAuthenticated}
           >
             <EditOutlined />
@@ -117,7 +122,7 @@ const ProductList = () => {
   ];
 
   return (
-    <Spin spinning={isLoading}>
+    <Fragment>
       <Modal
         title="Authentication Required"
         open={openModal}
@@ -133,7 +138,7 @@ const ProductList = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Authenticate
+              Sign in
             </Button>
           </Form.Item>
         </Form>
@@ -171,7 +176,7 @@ const ProductList = () => {
           },
         }}
       />
-    </Spin>
+    </Fragment>
   );
 };
 
