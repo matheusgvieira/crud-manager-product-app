@@ -20,6 +20,18 @@ pnpm dev
 bun dev
 ```
 
+### Page list
+
+![alt text](images/list.png)
+
+### Add Product
+
+![alt text](images/update.png)
+
+### Update Product
+
+![alt text](images/add.png)
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
