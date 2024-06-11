@@ -25,6 +25,8 @@ export type ProductUpdate = Omit<
 
 interface ProductStore {
   products: Product[];
+  total: number;
+  total_pages: number;
   fetchProducts: (page: number, page_size: number) => Promise<void>;
   addProduct: (product: ProductCreate) => Promise<void>;
   updateProduct: (product: ProductUpdate) => Promise<void>;
@@ -33,6 +35,8 @@ interface ProductStore {
 
 export const useProductStore = create<ProductStore>((set) => ({
   products: [],
+  total: 0,
+  total_pages: 0,
   fetchProducts: async (page: number, page_size: number): Promise<void> => {
     const { data: products } = await api.get("/product", {
       params: {
@@ -41,7 +45,11 @@ export const useProductStore = create<ProductStore>((set) => ({
       },
     });
 
-    set({ products: products.data });
+    set({
+      products: products.data,
+      total: products.total,
+      total_pages: products.total_pages,
+    });
   },
   addProduct: async (product: ProductCreate): Promise<void> => {
     const { name, price, description, stock, category } = product;
@@ -54,7 +62,11 @@ export const useProductStore = create<ProductStore>((set) => ({
       category,
     });
 
-    set((state) => ({ products: [...state.products, data.product] }));
+    set((state) => ({
+      products: [...state.products, data.product],
+      total: state.total + 1,
+      total_pages: Math.ceil((state.total + 1) / 10),
+    }));
   },
   updateProduct: async (product: ProductUpdate): Promise<void> => {
     const { name, price, description, stock, category, _id } = product;

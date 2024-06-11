@@ -14,6 +14,7 @@ import { usePushRoute } from "@/routes";
 const ProductList = () => {
   const [form] = Form.useForm();
   const products = useProductStore((state) => state.products);
+  const total = useProductStore((state) => state.total);
   const removeProduct = useProductStore((state) => state.removeProduct);
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const authenticate = useAuth((state) => state.authenticate);
@@ -95,7 +96,7 @@ const ProductList = () => {
       dataIndex: "created_at",
       key: "created_at",
       render: (date: string) =>
-        date ? format(new Date(date), "dd/MM/yyyy") : "",
+        date ? format(new Date(date), "yyyy-MM-dd") : "",
     },
     {
       title: "Actions",
@@ -121,13 +122,17 @@ const ProductList = () => {
     },
   ];
 
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
+
   return (
     <Fragment>
       <Modal
         title="Authentication Required"
         open={openModal}
         footer={false}
-        onClose={() => setOpenModal(false)}
+        onCancel={handleCancel}
       >
         <Form onFinish={mutateAuthentication} form={form}>
           <Form.Item label="Client ID" name="client_id">
@@ -169,7 +174,7 @@ const ProductList = () => {
         pagination={{
           current: page,
           pageSize,
-          total: products.length,
+          total,
           onChange: (page, pageSize) => {
             setPage(page);
             setPageSize(pageSize);
