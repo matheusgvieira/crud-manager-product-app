@@ -134,7 +134,14 @@ const ProductList = () => {
         footer={false}
         onCancel={handleCancel}
       >
-        <Form onFinish={mutateAuthentication} form={form}>
+        <Form
+          onFinish={mutateAuthentication}
+          form={form}
+          initialValues={{
+            client_id: "",
+            client_secret: "",
+          }}
+        >
           <Form.Item label="Client ID" name="client_id">
             <Input placeholder="Insert your client id" />
           </Form.Item>
